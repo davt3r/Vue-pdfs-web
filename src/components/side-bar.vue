@@ -18,11 +18,15 @@
 </template>
 
 <script setup lang="ts">
+import type { PdfFile } from '@/models/file-pdf'
 import { ref } from 'vue'
+
+const pdfs = ref<PdfFile[][]>([[], [], []])
 
 const handleFileChangeText = (event: Event) => {
   const target = event.target as HTMLInputElement
   const file = target.files?.[0]
+
   if (file) {
     const pdfFile: any = {
       name: file.name,
