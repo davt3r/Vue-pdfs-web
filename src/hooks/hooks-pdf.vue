@@ -40,7 +40,7 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { PdfFile } from '@/models/file-pdf'
+import { type PdfFile } from '@/models/file-pdf'
 
 const pdfs = ref<PdfFile[][]>([[], [], []])
 const draggedPdf = ref<{ sectionIndex: number; pdfIndex: number } | undefined>()
@@ -69,7 +69,7 @@ const handleFileChange = (event: Event) => {
   const target = event.target as HTMLInputElement
   const file = target.files?.[0]
   if (file) {
-    const pdfFile: PDFFile = {
+    const pdfFile: PdfFile = {
       name: file.name,
       file: file
     }
