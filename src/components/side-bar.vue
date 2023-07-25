@@ -1,66 +1,36 @@
 <template>
-  <div>
-    <section class="sidebar">
-      <div>
-        <input type="file" @change="handleFileChangeText" accept=".txt" />
-        <label>Documentos TXT</label>
-      </div>
-      <div>
-        <input type="file" @change="handleFileChangeImage" accept="image/*" />
-        <label>Imágenes</label>
-      </div>
-      <div>
-        <input type="file" @change="handleFileChangeAll" accept=".txt,image/*" />
-        <label>Todos los archivos</label>
-      </div>
-    </section>
-  </div>
+  <section class="sidebar" @dragover="handleDragOver(3, $event)" @drop="handleDrop(3, $event)">
+    <input type="file" @change="handleFileChange" accept=".pdf , .txt" />
+
+    <div
+      v-for="(item, index) in pdfs[3]"
+      :key="index"
+      :draggable="true"
+      @dragstart="handleDragStart(3, index)"
+    >
+      {{ item.name }}
+    </div>
+  </section>
 </template>
 
-<script setup lang="ts">
-import type { PdfFile } from '@/models/file-pdf'
-import { ref } from 'vue'
+<script lang="ts">
+import {
+  pdfs,
+  handleDragStart,
+  handleDragOver,
+  handleDrop,
+  handleFileChange
+} from '@/hooks/hooks-pdf.vue'
 
-const pdfs = ref<PdfFile[][]>([[], [], []])
-
-const handleFileChangeText = (event: Event) => {
-  const target = event.target as HTMLInputElement
-  const file = target.files?.[0]
-
-  if (file) {
-    const pdfFile: any = {
-      name: file.name,
-      file: file
+export default {
+  setup() {
+    return {
+      pdfs,
+      handleDragStart,
+      handleDragOver,
+      handleDrop,
+      handleFileChange
     }
-    pdfs.value[0].push(pdfFile)
-  }
-}
-
-const handleFileChangeImage = (event: Event) => {
-  const target = event.target as HTMLInputElement
-  const file = target.files?.[0]
-  if (file) {
-    if (file.type.startsWith('image/')) {
-      const pdfFile: any = {
-        name: file.name,
-        file: file
-      }
-      pdfs.value[1].push(pdfFile)
-    } else {
-      console.warn('El archivo seleccionado no es una imagen.')
-    }
-  }
-}
-
-const handleFileChangeAll = (event: Event) => {
-  const target = event.target as HTMLInputElement
-  const file = target.files?.[0]
-  if (file) {
-    const pdfFile: any = {
-      name: file.name,
-      file: file
-    }
-    pdfs.value[2].push(pdfFile)
   }
 }
 </script>
@@ -71,8 +41,6 @@ const handleFileChangeAll = (event: Event) => {
   border-radius: 10px;
   padding: 10px;
   margin: 10px;
-  display: flex;
-  flex-direction: column;
 }
 
 .sidebar > div {
